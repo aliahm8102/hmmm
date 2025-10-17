@@ -8,6 +8,10 @@
       href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <style>
       body {
         margin: 0;
@@ -55,54 +59,103 @@
         pointer-events: none;
         z-index: 50;
       }
+      .float {
+        display: inline-block;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      #intro {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: #0f172a;
+      }
+      #startBtn {
+        font-size: 2rem;
+        padding: 20px 40px;
+        border: none;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #ff7aa2, #ffd166, #6ee7b7, #93c5fd);
+        cursor: pointer;
+        font-family: "Vazirmatn", sans-serif;
+        color: #111;
+        font-weight: 900;
+        transition: transform 0.2s;
+      }
+      #startBtn:hover {
+        transform: scale(1.05);
+      }
     </style>
   </head>
   <body>
-    <canvas id="confetti"></canvas>
-    <div id="countdown">10</div>
-    <div id="main">
-      <h1>حسین تولدت مبارک 🎉</h1>
-      <p>امیدوارم همیشه شاد و خندون باشی🎂✨</p>
+    <div id="intro">
+      <button id="startBtn">Start</button>
     </div>
-    <audio id="ding" preload="auto">
-      <source
-        src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAAAnEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        type="audio/mpeg"
-      />
+    <canvas id="confetti"></canvas>
+    <div id="countdown" style="display: none">5</div>
+    <div id="main">
+      <h1 class="animate__animated animate__bounce">حسین تولدت مبارک 🎉</h1>
+      <p class="float">امیدوارم همیشه شاد و خندون باشی🎂✨</p>
+    </div>
+    <audio id="music" preload="auto">
+      <source src="happy_birthday.mp3" type="audio/mpeg" />
     </audio>
     <script>
-      const c = $("#countdown"),
-        m = $("#main"),
-        ctx = $("#confetti").getContext("2d");
-      let conf = [];
-      function $(s) {
-        return document.querySelector(s);
-      }
-      let n = 9;
-      const timer = setInterval(() => {
+      // button
+      document.getElementById("startBtn").addEventListener("click", () => {
+        document.getElementById("intro").style.display = "none";
+        document.getElementById("countdown").style.display = "block";
+        startCountdown();
+      });
+
+      function startCountdown() {
+        let n = 5;
+        const c = document.getElementById("countdown");
         c.textContent = n;
-        n--;
-        if (n < 0) {
-          clearInterval(timer);
-          start();
-        }
-      }, 1000);
-      function start() {
-        c.style.display = "none";
-        m.style.display = "flex";
-        party();
-        try {
-          $("#ding").play();
-        } catch (e) {}
+        const timer = setInterval(() => {
+          n--;
+          c.textContent = n;
+          if (n < 1) {
+            clearInterval(timer);
+            startParty();
+          }
+        }, 1000);
       }
-      const canvas = $("#confetti");
+
+      function startParty() {
+        document.getElementById("countdown").style.display = "none";
+        document.getElementById("main").style.display = "flex";
+        startConfetti(200);
+        const music = document.getElementById("music");
+        if (music) {
+          music.currentTime = 0;
+          music.play().catch(() => {});
+        }
+      }
+
+      const canvas = document.getElementById("confetti");
+      const ctx = canvas.getContext("2d");
+      let confettiPieces = [];
       canvas.width = innerWidth;
       canvas.height = innerHeight;
-      function party() {
-        for (let i = 0; i < 200; i++) {
-          conf.push({
+      function startConfetti(n = 150) {
+        for (let i = 0; i < n; i++) {
+          confettiPieces.push({
             x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height * 0.5,
+            y: -20 - Math.random() * canvas.height * 0.5,
             r: 4 + Math.random() * 6,
             s: 2 + Math.random() * 3,
             a: Math.random() * Math.PI * 2,
@@ -111,12 +164,12 @@
             hue: Math.floor(Math.random() * 360),
           });
         }
-        loop();
+        requestAnimationFrame(loop);
       }
       function loop() {
         requestAnimationFrame(loop);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        conf.forEach((p) => {
+        confettiPieces.forEach((p) => {
           p.y += p.s;
           p.x += Math.sin(p.a) * 0.8;
           p.a += p.va;
