@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Your Inventory</title>
+    <link rel="stylesheet" href="inventory_style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>📜Inventory</h1>
+        <div class="topbar">
+          <span>💎 Gems: <span id="gems"></span></span>
+          <a href="index.html"><button>Back to Main</button></a>
+        </div>
+      </header>
+
+      <main>
+        <div id="cardGrid" class="grid"></div>
+      </main>
+    </div>
+
+    <script>
+      async function loadInventory() {
+        const gems = JSON.parse(localStorage.getItem("gems") || "100");
+        const inventory = JSON.parse(localStorage.getItem("inventory") || "{}");
+        document.getElementById("gems").textContent = gems;
+
+        const res = await fetch("cards.json");
+        const cards = await res.json();
+
+        const grid = document.getElementById("cardGrid");
+        grid.innerHTML = "";
+
+        cards.forEach((card) => {
+          const count = inventory[card.id] || 0;
+          if (count === 0) return;
+
+          const div = document.createElement("div");
+          // Apply rarity-based class
+          div.className = `card rarity-${card.rarity.toLowerCase()}`;
+
+          div.innerHTML = `
+          <img src="${card.art}" alt="${card.name}" />
+          <div class="hover-info">
+            <h3>${card.name}</h3>
+            <p>${card.description}</p>
+            <br>
+            <p><strong>Owned:</strong> ${count}</p>
+          </div>
+        `;
+          grid.appendChild(div);
+        });
+      }
+
+      loadInventory();
+    </script>
+  </body>
+</html>

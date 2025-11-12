@@ -1,192 +1,51 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>hmmmmm</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-    <style>
-      body {
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #0f172a;
-        color: #fff;
-        font-family: "Vazirmatn", sans-serif;
-        overflow: hidden;
-      }
-      #countdown {
-        font-size: 12vw;
-        font-weight: 900;
-        animation: pop 1s infinite alternate;
-      }
-      @keyframes pop {
-        to {
-          transform: scale(1.1);
-        }
-      }
-      #main {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        text-align: center;
-      }
-      h1 {
-        font-size: clamp(32px, 6vw, 60px);
-        background: linear-gradient(135deg, #ff7aa2, #ffd166, #6ee7b7, #93c5fd);
-        -webkit-background-clip: text;
-        color: transparent;
-        margin: 0;
-      }
-      p {
-        font-size: clamp(16px, 2.4vw, 22px);
-        margin: 0;
-        color: #e5e7eb;
-      }
-      canvas {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 50;
-      }
-      .float {
-        display: inline-block;
-        animation: float 3s ease-in-out infinite;
-      }
-
-      @keyframes float {
-        0% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-15px);
-        }
-        100% {
-          transform: translateY(0);
-        }
-      }
-
-      #intro {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        background: #0f172a;
-      }
-      #startBtn {
-        font-size: 2rem;
-        padding: 20px 40px;
-        border: none;
-        border-radius: 20px;
-        background: linear-gradient(135deg, #ff7aa2, #ffd166, #6ee7b7, #93c5fd);
-        cursor: pointer;
-        font-family: "Vazirmatn", sans-serif;
-        color: #111;
-        font-weight: 900;
-        transition: transform 0.2s;
-      }
-      #startBtn:hover {
-        transform: scale(1.05);
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <title>Gacha Summon</title>
+    <link rel="stylesheet" href="index_style.css" />
   </head>
   <body>
-    <div id="intro">
-      <button id="startBtn">Start</button>
+    <div class="container">
+      <header class="dashboard">
+        <div class="account">
+          <h1>🎮 Gacha Dashboard</h1>
+          <p id="username">Player: Guest</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat-item">💎 Gems: <span id="gems">0</span></div>
+          <div class="stat-item">🎴 Cards: <span id="totalCards">0</span></div>
+        </div>
+
+        <div class="actions">
+          <button id="addGemsBtn">+50 Gems</button>
+          <button id="resetBtn" class="danger">Reset Data</button>
+          <a href="inventory.html"><button>View Inventory</button></a>
+        </div>
+      </header>
+
+      <main>
+        <div class="summon-section">
+          <h2>✨ Try Your Luck</h2>
+          <div class="summon-buttons">
+            <button id="pullBtn" class="summon-btn">Pull (10 Gems)</button>
+            <button id="pull10Btn" class="summon-btn">
+              10x Pull (100 Gems)
+            </button>
+          </div>
+
+          <div id="animation-area">
+            <div class="summon-circle"></div>
+            <div id="cardReveal" class="hidden"></div>
+            <div id="multiReveal" class="hidden"></div>
+          </div>
+
+          <div id="recent"></div>
+        </div>
+      </main>
     </div>
-    <canvas id="confetti"></canvas>
-    <div id="countdown" style="display: none">5</div>
-    <div id="main">
-      <h1 class="animate__animated animate__bounce">حسین تولدت مبارک 🎉</h1>
-      <p class="float">امیدوارم همیشه شاد و خندون باشی🎂✨</p>
-    </div>
-    <audio id="music" preload="auto">
-      <source src="happy_birthday.mp3" type="audio/mpeg" />
-    </audio>
-    <script>
-      // button
-      document.getElementById("startBtn").addEventListener("click", () => {
-        document.getElementById("intro").style.display = "none";
-        document.getElementById("countdown").style.display = "block";
-        startCountdown();
-      });
 
-      function startCountdown() {
-        let n = 5;
-        const c = document.getElementById("countdown");
-        c.textContent = n;
-        const timer = setInterval(() => {
-          n--;
-          c.textContent = n;
-          if (n < 1) {
-            clearInterval(timer);
-            startParty();
-          }
-        }, 1000);
-      }
-
-      function startParty() {
-        document.getElementById("countdown").style.display = "none";
-        document.getElementById("main").style.display = "flex";
-        startConfetti(200);
-        const music = document.getElementById("music");
-        if (music) {
-          music.currentTime = 0;
-          music.play().catch(() => {});
-        }
-      }
-
-      const canvas = document.getElementById("confetti");
-      const ctx = canvas.getContext("2d");
-      let confettiPieces = [];
-      canvas.width = innerWidth;
-      canvas.height = innerHeight;
-      function startConfetti(n = 150) {
-        for (let i = 0; i < n; i++) {
-          confettiPieces.push({
-            x: Math.random() * canvas.width,
-            y: -20 - Math.random() * canvas.height * 0.5,
-            r: 4 + Math.random() * 6,
-            s: 2 + Math.random() * 3,
-            a: Math.random() * Math.PI * 2,
-            va: (Math.random() * 2 - 1) * 0.05,
-            shape: Math.random() < 0.5 ? "rect" : "circle",
-            hue: Math.floor(Math.random() * 360),
-          });
-        }
-        requestAnimationFrame(loop);
-      }
-      function loop() {
-        requestAnimationFrame(loop);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        confettiPieces.forEach((p) => {
-          p.y += p.s;
-          p.x += Math.sin(p.a) * 0.8;
-          p.a += p.va;
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.a);
-          ctx.fillStyle = `hsl(${p.hue} 85% 60%)`;
-          if (p.shape === "rect") {
-            ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2 * 0.6);
-          } else {
-            ctx.beginPath();
-            ctx.arc(0, 0, p.r, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          ctx.restore();
-        });
-      }
-    </script>
+    <script src="index.js"></script>
   </body>
 </html>

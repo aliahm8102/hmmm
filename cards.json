@@ -1,0 +1,66 @@
+[
+  {
+    "id": "c1",
+    "name": "Sparkling Knight",
+    "rarity": "Common",
+    "description": "A brave knight who shines under any battle.",
+    "art": "images/c1.png"
+  },
+  {
+    "id": "c6",
+    "name": "Iron Vanguard",
+    "rarity": "Common",
+    "description": "A steadfast foot soldier whose armor bears the scars of countless wars.",
+    "art": "images/c6.png"
+  },
+  {
+    "id": "c7",
+    "name": "Emerald Squire",
+    "rarity": "Common",
+    "description": "An eager young warrior learning the ways of chivalry.",
+    "art": "images/c7.png"
+  },
+
+
+  {
+    "id": "c2",
+    "name": "Flame Archer",
+    "rarity": "Uncommon",
+    "description": "Shoots burning arrows with deadly precision.",
+    "art": "images/c2.png"
+  },
+
+
+  {
+    "id": "c3",
+    "name": "Moon Priestess",
+    "rarity": "Rare",
+    "description": "Draws power from the light of the full moon.",
+    "art": "images/c3.png"
+  },
+
+
+  {
+    "id": "c4",
+    "name": "Thunder Dragon",
+    "rarity": "Epic",
+    "description": "A creature forged from storms and lightning.",
+    "art": "images/c4.png"
+  },
+
+
+  {
+    "id": "c5",
+    "name": "Celestial Emperor",
+    "rarity": "Legendary",
+    "description": "Ruler of heavens, embodiment of cosmic balance.",
+    "art": "images/c5.png"
+  },
+  {
+    "id": "c8",
+    "name": "Monkey D. Luffy",
+    "rarity": "Mythic",
+    "description": "Captain of the Straw Hat Pirates",
+    "art": "images/c8.png"
+  }
+]
